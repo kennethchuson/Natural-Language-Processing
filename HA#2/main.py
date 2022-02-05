@@ -1,6 +1,7 @@
 
 
 import nltk
+import collections
 from nltk.tokenize import word_tokenize
 
 nltk.download('gutenberg')
@@ -20,49 +21,41 @@ class SimpleWordAutoComplete(object):
         return nltk.corpus.gutenberg.fileids()
 
     def func_WordAutocomplete(self):
-        pass
-
-        #1) Build a vocabulary (set of all unique words) using any English corpus from nltk.
         
         get_list_gutenberg_text = nltk.corpus.gutenberg.words(self.what_textFile)
 
         starting_word_number = 0
         ending_word_number = 500
+        set_of_words = collections.OrderedDict()
         number_occurrences = {}
         store_words = []
         check_if_exist_from_your_input = False
-        levenshtein_distance_store = {} 
+        levenshtein_distance_store = {}
 
+
+        #1) Build a vocabulary (set of all unique words) using any English corpus from nltk.    
+        #2) Find the number of occurrences (frequency) of each word in the vocabulary.  Also, find the total number of words in the chosen corpus (N).
 
         print("words in a ", what_textFile) 
-        for word in get_list_gutenberg_text[starting_word_number:ending_word_number]: 
-            print(word, sep=' ', end=' ')
-            store_words.append(word) 
-
-        
-        #2) Find the number of occurrences (frequency) of each word in the vocabulary.  Also, find the total number of words in the chosen corpus (N).
-        print("number of occurences (frequency) of each word in a vocabulary")
-        
         for word in get_list_gutenberg_text[starting_word_number:ending_word_number]:
-            if word not in number_occurrences:
-                number_occurrences[word] = 0
-            number_occurrences[word] += 1
-            print("Number occurences of ", number_occurrences.keys(), " is ", number_occurrences.values())
+            set_of_words[word] = set_of_words.get(word, 0) + 1
+            store_words.append(word)
 
-        print("total number of words", len(store_words))
+
+        print(set_of_words)
+
+        
+        set_of_words_frequency = [(k, v) for k, v in set_of_words.items()]
+
 
         #3) Find the relative frequency of each word W where relative frequency of W = frequency_of_W / N. This relative frequency can be interpreted as the probability (likelihood) of each word in the corpus.
-        for word in get_list_gutenberg_text[starting_word_number:ending_word_number]:
-            if word not in number_occurrences:
-                number_occurrences[word] = 0
-            number_occurrences[word] += (1 / len(store_words)) 
-            print("Relative Frequency of ", number_occurrences.keys(), " is ", number_occurrences.values())
 
-        #4) 
-
+        for (k, v) in set_of_words_frequency:
+            freq = v / len(store_words)
+            print(k, " relative frequency of: ", freq)
+        
         #4.a) If the input string XYZ exists in your vocabulary, return "XYZ is a complete and correct word in English."
-            
-
+    
         for word in get_list_gutenberg_text[starting_word_number:ending_word_number]:
             if self.input_argument in word:
                 check_if_exist_from_your_input = True
@@ -86,7 +79,6 @@ class SimpleWordAutoComplete(object):
                 a = (i, levenshtein_distance_store[i])
                 print(a) 
             
-
 
     
     def LevenshteinDistance_func(self, word1, word2):
