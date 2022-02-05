@@ -2,6 +2,7 @@
 
 import nltk
 import collections
+from heapq import nsmallest
 from nltk.tokenize import word_tokenize
 
 nltk.download('gutenberg')
@@ -17,9 +18,6 @@ class SimpleWordAutoComplete(object):
     def getListWords(self):
         return self.tokenize_input_argument
 
-    def printFiles_from_gutenberg(self):
-        return nltk.corpus.gutenberg.fileids()
-
     def func_WordAutocomplete(self):
         
         get_list_gutenberg_text = nltk.corpus.gutenberg.words(self.what_textFile)
@@ -27,7 +25,6 @@ class SimpleWordAutoComplete(object):
         starting_word_number = 0
         ending_word_number = 500
         set_of_words = collections.OrderedDict()
-        number_occurrences = {}
         store_words = []
         check_if_exist_from_your_input = False
         levenshtein_distance_store = {}
@@ -72,12 +69,15 @@ class SimpleWordAutoComplete(object):
             for word in get_list_gutenberg_text[starting_word_number:ending_word_number]: 
                 levenshetin_distance = self.LevenshteinDistance_func(self.input_argument, word) 
                 print(word, " leveinshtein distance is ", levenshetin_distance)
-                levenshtein_distance_store[levenshetin_distance] = word 
+                levenshtein_distance_store[word] = levenshetin_distance
             
-            print("top words")
-            for i in sorted(levenshtein_distance_store): 
-                a = (i, levenshtein_distance_store[i])
-                print(a) 
+            
+            top5Words = nsmallest(5, levenshtein_distance_store, key = levenshtein_distance_store.get)
+            print("top 5 words")
+            
+            for v in top5Words:
+                print(v, " : probability - ", levenshtein_distance_store.get(v) / len(store_words))
+
             
 
     
@@ -104,11 +104,6 @@ class SimpleWordAutoComplete(object):
             
 
         
-             
-
-
-
-        
         
             
 
@@ -119,6 +114,6 @@ what_textFile = 'shakespeare-hamlet.txt'
 
 word_autoComplete = SimpleWordAutoComplete(input_argument, what_textFile)
 
-print(word_autoComplete.getListWords())
-#print(word_autoComplete.func_WordAutocomplete())
+print("your input word(s)", word_autoComplete.getListWords())
+
 word_autoComplete.func_WordAutocomplete()
