@@ -51,7 +51,6 @@ class Next_word_predictor_using_a_bigram_language_model(object):
         self.get_list_gutenberg_text = nltk.corpus.gutenberg.words(what_textFile)
         self.store_text = []
         self.bigram_text = []
-        self.sentence_text = ' '.join(word for word in self.store_text)
 
 
     def print_words_from_nltk_corups(self):
