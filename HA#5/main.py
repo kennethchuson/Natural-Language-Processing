@@ -44,12 +44,28 @@ class Text_Classification_Using_Naive_Bayes(object):
             for line in csv_reader:
                 print(line[0])
                 self.store_text.append(line[0])
+
+    def Read_train_csv(self):
+        pass
+
+    def Read_model_csv(self):
+        pass 
                 
-    def calculate(self):
+    def calculate_training_sets(self):
         print("------------calculate-----------") 
 
+        #getting sentences
         for i in range(len(self.store_text)):
-            print(self.store_text[i]) 
+            print(self.store_text[i])
+
+        #store created data into two files: trains.csv and test.csv
+
+    def train_naive_bayes_classifier(self):
+        pass
+
+    def learnt_NB_classifier(self):
+        pass
+        
         
     
 
@@ -60,7 +76,7 @@ class_text_classify = Text_Classification_Using_Naive_Bayes(file_csv_name)
 class_text_classify.Reading_file()
 
 
-class_text_classify.calculate() 
+class_text_classify.calculate_training_sets() 
 
 
 
