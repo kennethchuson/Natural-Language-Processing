@@ -35,15 +35,18 @@ class Text_Classification_Using_Naive_Bayes(object):
 
     def __init__(self, toy_labeled_dataset):
         self.toy_labeled_dataset = toy_labeled_dataset
-        self.store_text = [] 
+        self.store_label = [] 
+        self.store_text = []
+        self.assign_text_label = {} #key -> Labels : value -> sentences
     
     def Reading_file(self):
         with open(self.toy_labeled_dataset, 'r') as csv_file:
             csv_reader = csv.reader(csv_file)
             next(csv_reader)
             for line in csv_reader:
-                print(line[0])
-                self.store_text.append(line[0])
+                self.store_label.append(line[0])
+                self.store_text.append(line[1])
+                self.assign_text_label[line[0]] = line[1] 
 
     def Read_train_csv(self):
         pass
@@ -52,11 +55,19 @@ class Text_Classification_Using_Naive_Bayes(object):
         pass 
                 
     def calculate_training_sets(self):
-        print("------------calculate-----------") 
+        print("------------calculate-----------")
+
+        #getting assign text and labels
+        print(self.assign_text_label) 
+
+        #getting labels
+        for i in range(len(self.store_label)):
+            print(self.store_label[i]) 
 
         #getting sentences
         for i in range(len(self.store_text)):
             print(self.store_text[i])
+            
 
         #store created data into two files: trains.csv and test.csv
 
