@@ -63,16 +63,12 @@ class Text_Classification_Using_Naive_Bayes(object):
         for i in range(len(self.store_text)):
             print(self.store_text[i])
 
-        
-            
+        print("---Naive Bayes Classifier---") 
+        '''
 
-        #store created data into two files: trains.csv and test.csv
+         Calculate the prior probabilities for both classes using the training data
 
-    def train_naive_bayes_classifier(self):
-        pass
-
-    def learnt_NB_classifier(self):
-        pass
+        '''
         
         
     
