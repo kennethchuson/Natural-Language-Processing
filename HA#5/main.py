@@ -38,6 +38,11 @@ class Text_Classification_Using_Naive_Bayes(object):
         self.store_label = [] 
         self.store_text = []
         self.assign_text_label = {} #key -> Labels : value -> sentences
+        self.store_label_one = []
+        self.store_label_two = []
+        self.store_text_from_label_one = []
+        self.store_text_from_label_two = []
+        
     
     def Reading_train_file(self):
         with open(self.toy_labeled_dataset, 'r') as csv_file:
@@ -46,7 +51,16 @@ class Text_Classification_Using_Naive_Bayes(object):
             for line in csv_reader:
                 self.store_label.append(line[0])
                 self.store_text.append(line[1])
-                self.assign_text_label[line[0]] = line[1] 
+                if line[0] == 'ham':
+                    self.store_label_one.append(line[0])
+                    self.store_text_from_label_one.append(line[1]) 
+                if line[0] == 'spam':
+                    self.store_label_two.append(line[0])
+                    self.store_text_from_label_two.append(line[1]) 
+
+    
+        self.assign_text_label = dict(zip(self.store_label, self.store_text))
+
 
                 
     def calculate_training_sets(self):
@@ -56,19 +70,29 @@ class Text_Classification_Using_Naive_Bayes(object):
         print(self.assign_text_label) 
 
         #getting labels
-        for i in range(len(self.store_label)):
-            print(self.store_label[i]) 
+        
+        #ham
+        for i in range(len(self.store_label_one)):
+            print(self.store_label_one[i])
 
         #getting sentences
-        for i in range(len(self.store_text)):
-            print(self.store_text[i])
 
-        print("---Naive Bayes Classifier---") 
+        #ham
+        for i in range(len(self.store_text_from_label_one)):
+            print(self.store_text_from_label_one[i])
+
+        print("---Naive Bayes Classifier---")
+
+        
         '''
 
          Calculate the prior probabilities for both classes using the training data
 
+         P(<#word> | <#number of words in class_one or class_two>) = count(<#word>) / count(<#number of words in class_one or class_two>) 
+
         '''
+        
+        
         
         
     
