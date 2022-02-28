@@ -36,6 +36,12 @@ import csv
 class Text_Classification_Using_Naive_Bayes(object):
 
     def __init__(self, toy_labeled_dataset_train, toy_labeled_dataset_test, toy_labeled_dataset_model,  toy_labeled_dataset_test_predictions):
+
+        '''
+        These stores will store the words, sentences, labels (either ham or spam) to seperate and organize these into categories. 
+        
+        
+        '''
  
         self.toy_labeled_dataset_train = toy_labeled_dataset_train
         self.toy_labeled_dataset_test = toy_labeled_dataset_test 
@@ -51,6 +57,10 @@ class Text_Classification_Using_Naive_Bayes(object):
         self.store_text_from_label_one = []
         self.store_text_from_label_two = []
 
+        '''
+        These stores are for test and same thing to seperate and organize thsese into categories. 
+        
+        '''
 
         self.store_label_test = [] 
         self.store_text_test = [] 
@@ -66,6 +76,10 @@ class Text_Classification_Using_Naive_Bayes(object):
         
     
     def Reading_train_file(self):
+        '''
+            while reading the csv train file. Let store for text and labels. Also combine them together and which sentences belong 
+            to specific labels using a dictionary. 
+        '''
         with open(self.toy_labeled_dataset_train, 'r') as csv_file:
             csv_reader = csv.reader(csv_file)
             next(csv_reader)
@@ -87,6 +101,11 @@ class Text_Classification_Using_Naive_Bayes(object):
 
     
     def Reading_test_file(self): 
+        '''
+            while reading the csv test file. Let store for text and labels. Also combine them together and which sentences belong 
+            to specific labels using a dictionary. 
+            After that, it calls to the calculating the training sets function. 
+        '''
         with open(self.toy_labeled_dataset_test, 'r') as csv_file: 
             csv_reader = csv.reader(csv_file)
             next(csv_reader)
@@ -105,6 +124,7 @@ class Text_Classification_Using_Naive_Bayes(object):
         
         self.assign_text_label_test = dict(zip(self.store_text_test, self.store_label_test))
 
+
         self.calculate_training_sets(self.assign_text_label_test)
 
 
@@ -112,6 +132,10 @@ class Text_Classification_Using_Naive_Bayes(object):
         
 
     def Write_model_file(self, store_label_one_label, store_label_one_word, store_probability_one_word, store_label_two_label, store_label_two_word, store_probability_two_word): 
+
+        '''
+        Writing to a model csv to store each word, labels, and probability of each word. 
+        '''
 
 
         with open(self.toy_labeled_dataset_model, 'w') as csv_file: 
@@ -137,6 +161,8 @@ class Text_Classification_Using_Naive_Bayes(object):
                 
     def calculate_training_sets(self, test_chose):
 
+        #the test_chose is from the test sentences and labels. 
+
         print("------------Calculate Naive Bayes Classifier-----------")
 
         
@@ -148,6 +174,11 @@ class Text_Classification_Using_Naive_Bayes(object):
         print("Prior Probability Spam: ", prob_two) 
 
         #keep track of each word 
+
+        '''
+            Reason using split because we want to split the sentences into each word, so it is easy to calculate and keep of track of words in each sentence. 
+        
+        '''
 
         store_split_one = [] 
         store_split_two = [] 
@@ -181,7 +212,10 @@ class Text_Classification_Using_Naive_Bayes(object):
 
         
         '''
+        
             dic_label ( key: (<spam or ham>, <word>) value: probability each word ) 
+
+            Using dic_label to organize and keep track of categories between labels, words, and probability of each word. 
         
         '''
         dic_label_one = {} 
@@ -205,8 +239,23 @@ class Text_Classification_Using_Naive_Bayes(object):
                     prob = (count_a2 + 1) / (len(store_split_one) + vocab_size)
                     dic_label_two[(val, word)] = prob 
 
+        '''
+        
+        Print out the each word of their probability. 
+
+        Label one is ham. 
+        Label two is spam. 
+        
+        '''
+
         print("label one: ", dic_label_one) 
         print("label two: ", dic_label_two) 
+
+
+        '''
+        Using separate arrays to store specific labels, probability and words. So that it is easier to handle while writing to a model.csv
+        
+        '''
 
         store_label_one_label = [] 
         store_label_one_word = [] 
@@ -242,6 +291,14 @@ class Text_Classification_Using_Naive_Bayes(object):
 
         self.Write_model_file(store_label_one_label, store_label_one_word, store_probability_one_word, store_label_two_label, store_label_two_word,   store_probability_two_word)
 
+
+        '''
+
+        These two functions have the same computation. Except the size of two classes (ham and spam) 
+        
+        
+        '''
+
         def calculate_prob_label_one(word_chose): 
             dic_calc = {} 
             count = store_split_one.count(word_chose) 
@@ -259,6 +316,14 @@ class Text_Classification_Using_Naive_Bayes(object):
             dic_calc[count_2] = prob_2 
 
             return [ i for i in dic_calc.values() ]
+
+
+        '''
+
+        This is for the test to caluclate the predicting class labels and write into test_predictions.csv file. 
+        
+        
+        '''
 
 
         prod_res_class_one = 1
@@ -310,6 +375,10 @@ class Text_Classification_Using_Naive_Bayes(object):
     
 
     def prior_Probabilties(self): 
+
+        '''
+            Calculating the prior probabilities
+        '''
 
         total_size = len(self.store_label_one + self.store_label_two)
         
