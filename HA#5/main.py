@@ -35,9 +35,12 @@ import csv
 
 class Text_Classification_Using_Naive_Bayes(object):
 
-    def __init__(self, toy_labeled_dataset):
-        #train variables
-        self.toy_labeled_dataset = toy_labeled_dataset
+    def __init__(self, toy_labeled_dataset_train, toy_labeled_dataset_test, toy_labeled_dataset_model,  toy_labeled_dataset_test_predictions):
+ 
+        self.toy_labeled_dataset_train = toy_labeled_dataset_train
+        self.toy_labeled_dataset_test = toy_labeled_dataset_test 
+        self.toy_labeled_dataset_model = toy_labeled_dataset_model
+        self.toy_labeled_dataset_test_predictions = toy_labeled_dataset_test_predictions
         self.store_label = [] 
         self.store_text = []
         self.assign_text_label = {} #key -> sentences : value -> labels
@@ -50,7 +53,7 @@ class Text_Classification_Using_Naive_Bayes(object):
         
     
     def Reading_train_file(self):
-        with open(self.toy_labeled_dataset, 'r') as csv_file:
+        with open(self.toy_labeled_dataset_train, 'r') as csv_file:
             csv_reader = csv.reader(csv_file)
             next(csv_reader)
             for line in csv_reader:
@@ -67,6 +70,21 @@ class Text_Classification_Using_Naive_Bayes(object):
         self.map_label_two_text = dict(zip(self.store_text_from_label_two, self.store_label_two))  
         
         self.assign_text_label = dict(zip(self.store_text, self.store_label))
+    
+
+    def Write_model_file(self, store_label_one_label, store_label_one_word, store_probability_one_word, store_label_two_label, store_label_two_word, store_probability_two_word): 
+
+
+        with open(self.toy_labeled_dataset_model, 'w') as csv_file: 
+            writer = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
+
+            for (x, y, z) in zip(store_label_one_label, store_label_one_word, store_probability_one_word): 
+                writer.writerow([x, y, z])
+
+            for (x, y, z) in zip(store_label_two_label, store_label_two_word, store_probability_two_word): 
+                writer.writerow([x, y, z])
+            
+            
 
 
                 
@@ -186,7 +204,43 @@ class Text_Classification_Using_Naive_Bayes(object):
         print("label one: ", dic_label_one) 
         print("label two: ", dic_label_two) 
 
+        store_label_one_label = [] 
+        store_label_one_word = [] 
+        store_probability_one_word = [] 
+
+        store_label_two_label = [] 
+        store_label_two_word = [] 
+        store_probability_two_word = [] 
+
+
+       
+
+
+    
+        for (key, val) in dic_label_one.items(): 
+            label_one_label = key[0]
+            label_one_word = key[1]
+            probability_one_word = val 
+            store_label_one_label.append(label_one_label) 
+            store_label_one_word.append(label_one_word)
+            store_probability_one_word.append(probability_one_word)
+            
         
+        for (key, val) in dic_label_two.items(): 
+            label_two_label = key[0]
+            label_two_word = key[1]
+            probability_two_word = val 
+            store_label_two_label.append(label_two_label)
+            store_label_two_word.append(label_two_word)
+            store_probability_two_word.append(probability_two_word)
+        
+        writing_to_a_file_model = self.Write_model_file(store_label_one_label, store_label_one_word, store_probability_one_word, store_label_two_label, store_label_two_word,   store_probability_two_word)
+        
+
+
+
+
+
             
         
 
@@ -201,40 +255,23 @@ class Text_Classification_Using_Naive_Bayes(object):
         return [prior_probability_label_one, prior_probability_label_two]
     
     
-        
 
-
-
-
-        
-        
-    
-
-
-        print("---Naive Bayes Classifier---")
-
-        
-        '''
-
-         Calculate the prior probabilities for both classes using the training data
-
-         P(<#word> | <#number of words in class_one or class_two>) = count(<#word>) / count(<#number of words in class_one or class_two>) 
-
-        '''
         
         
         
         
     
 
-file_csv_name = "train.csv"
+file_csv_names = ["train.csv", "test.csv", "models.csv", "test_predictions.csv"]
 
-class_text_classify = Text_Classification_Using_Naive_Bayes(file_csv_name)
+
+class_text_classify = Text_Classification_Using_Naive_Bayes(file_csv_names[0], file_csv_names[1], file_csv_names[2], file_csv_names[3])
 
 class_text_classify.Reading_train_file()
 
 
 class_text_classify.calculate_training_sets() 
+
 
 
 
