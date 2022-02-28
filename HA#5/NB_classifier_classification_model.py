@@ -165,6 +165,8 @@ class Text_Classification_Using_Naive_Bayes(object):
 
         print("------------Calculate Naive Bayes Classifier-----------")
 
+        print("--------NB Classifier-------") 
+
         
         prob_one = self.prior_Probabilties()[0] 
         prob_two = self.prior_Probabilties()[1] 
@@ -324,6 +326,9 @@ class Text_Classification_Using_Naive_Bayes(object):
         
         
         '''
+
+        print("--------NB Classification model-------") 
+
 
 
         prod_res_class_one = 1
