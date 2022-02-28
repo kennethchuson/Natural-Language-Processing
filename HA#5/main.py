@@ -29,15 +29,20 @@
 
         3.c) Output the test datapoints (sentences) and their predicted labels to a file named test_predictions.csv
 '''
+from __future__ import division
 import csv
+
 
 class Text_Classification_Using_Naive_Bayes(object):
 
     def __init__(self, toy_labeled_dataset):
+        #train variables
         self.toy_labeled_dataset = toy_labeled_dataset
         self.store_label = [] 
         self.store_text = []
-        self.assign_text_label = {} #key -> Labels : value -> sentences
+        self.assign_text_label = {} #key -> sentences : value -> labels
+        self.map_label_one_text = {} #key -> sentences : value -> Ham class 
+        self.map_label_two_text = {} #key -> sentences : value -> Spam class
         self.store_label_one = []
         self.store_label_two = []
         self.store_text_from_label_one = []
@@ -58,28 +63,153 @@ class Text_Classification_Using_Naive_Bayes(object):
                     self.store_label_two.append(line[0])
                     self.store_text_from_label_two.append(line[1]) 
 
-    
-        self.assign_text_label = dict(zip(self.store_label, self.store_text))
+        self.map_label_one_text = dict(zip(self.store_text_from_label_one, self.store_label_one))
+        self.map_label_two_text = dict(zip(self.store_text_from_label_two, self.store_label_two))  
+        
+        self.assign_text_label = dict(zip(self.store_text, self.store_label))
 
 
                 
     def calculate_training_sets(self):
         print("------------calculate-----------")
 
-        #getting assign text and labels
-        print(self.assign_text_label) 
+
 
         #getting labels
         
         #ham
         for i in range(len(self.store_label_one)):
-            print(self.store_label_one[i])
+            #print(self.store_label_one[i])
+            pass
+
+        #spam 
+        for i in range(len(self.store_label_two)): 
+            #print(self.store_label_two[i]) 
+            pass
+        
 
         #getting sentences
 
         #ham
+        print("HAM sentences train: ")
         for i in range(len(self.store_text_from_label_one)):
-            print(self.store_text_from_label_one[i])
+            #print(self.store_text_from_label_one[i])
+            pass
+        
+        #spam 
+        print("SPAM sentences train: ")
+        for i in range(len(self.store_text_from_label_two)): 
+            #print(self.store_text_from_label_two[i]) 
+            pass
+        
+        prob_one = self.prior_Probabilties()[0] 
+        prob_two = self.prior_Probabilties()[1] 
+        
+        #Prior Probabilities 
+        print("Prior Probability Ham: ", prob_one)
+        print("Prior Probability Spam: ", prob_two) 
+
+        #keep track of each word 
+
+        store_split_one = [] 
+        store_split_two = [] 
+        store_split_all_words = [] 
+
+        #spam
+        for i in range(len(self.store_text_from_label_one)):  
+            splitting_convert_one = self.store_text_from_label_one[i].split(" ") 
+            for j in range(len(splitting_convert_one)): 
+                store_split_one.append(splitting_convert_one[j]) 
+        
+        #ham 
+        for i in range(len(self.store_text_from_label_two)): 
+            splitting_convert_two = self.store_text_from_label_two[i].split(" ") 
+            for j in range(len(splitting_convert_two)): 
+                store_split_two.append(splitting_convert_two[j])  
+
+
+        #all words
+        combine_arr = self.store_text_from_label_one + self.store_text_from_label_two 
+
+        for i in range(len(combine_arr)):  
+            splitting_convert_three = combine_arr[i].split(" ") 
+            for j in range(len(splitting_convert_three)):
+                store_split_all_words.append(splitting_convert_three[j])
+        
+        vocab_size = len(list(set(store_split_all_words)))
+
+
+
+        def calculate_prob_label_one(word_chose): 
+            dic_calc = {} 
+            count = store_split_one.count(word_chose) 
+            prob = (count + 1) / (len(store_split_one) + vocab_size)
+            dic_calc[count] = prob 
+
+            return [ i for i in dic_calc.values()]
+
+    
+        def calculate_prob_label_two(word_chose): 
+            dic_calc = {} 
+
+            count_2 = store_split_two.count(word_chose)
+            prob_2 = (count_2 + 1) / (len(store_split_two) + vocab_size)  
+            dic_calc[count_2] = prob_2 
+
+            return [ i for i in dic_calc.values() ]
+        
+        '''
+            dic_label ( key: (<spam or ham>, <word>) value: probability each word ) 
+        
+        '''
+        dic_label_one = {} 
+        dic_label_two = {} 
+
+        for (key, val) in self.assign_text_label.items(): 
+            if val == "ham":
+                a1 = key.split(" ") 
+
+                for word in a1: 
+                    count_a1 = store_split_all_words.count(word) 
+                    prob = (count_a1 + 1) / (len(store_split_one) + vocab_size) 
+                    dic_label_one[(val, word)] = prob 
+
+
+            if val == "spam": 
+                a2 = key.split(" ") 
+                
+                for word in a2: 
+                    count_a2 = store_split_all_words.count(word) 
+                    prob = (count_a2 + 1) / (len(store_split_one) + vocab_size)
+                    dic_label_two[(val, word)] = prob 
+
+        print("label one: ", dic_label_one) 
+        print("label two: ", dic_label_two) 
+
+        
+            
+        
+
+
+    def prior_Probabilties(self): 
+
+        total_size = len(self.store_label_one + self.store_label_two)
+        
+        prior_probability_label_one = len(self.store_label_one) / total_size 
+        prior_probability_label_two = len(self.store_text_from_label_one) / total_size
+
+        return [prior_probability_label_one, prior_probability_label_two]
+    
+    
+        
+
+
+
+
+        
+        
+    
+
 
         print("---Naive Bayes Classifier---")
 
